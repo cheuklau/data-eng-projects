@@ -29,5 +29,17 @@ The bottom half of the platform architecture is composed of the following:
 
 ## File Description
 
+- `src/data_fetch/data_fetch.sh`
+    * Generates list of download links.
+    * Runs `download_rename.py` to download data from each link.
+    * Pushes data to AWS S3.
+    * This script is run periodically from Airflow to update dataset.
+- `src/data_fetch/download_rename.py`
+    * Auxiliary function to download data from a given download link.
+    * Used by `data_fetch.sh`.
 
+## Possible Improvements
 
+- `src/data_fetch/data_fetch.sh`
+    * Do not decompress raw data locally and upload to AWS S3.
+    * Just have Spark directly read `.gz` files.

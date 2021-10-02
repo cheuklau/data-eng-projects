@@ -51,3 +51,4 @@ The bottom half of the platform architecture is composed of the following:
     * Do not decompress raw data locally and upload to AWS S3.
     * Just have Spark directly read `.gz` files.
 - Add `src/batcg_processing/metrics_calculation_batch_parquet.py` to read data from Parquet in AWS S3.
+- Check if any improvements can be made to Spark SQL calls in metrics calculation.

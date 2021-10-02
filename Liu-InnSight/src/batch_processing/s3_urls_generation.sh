@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Script to generate s3 links for data cleaning batch processing
 # Usage: ./s3_urls_generation.sh [city_name]

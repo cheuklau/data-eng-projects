@@ -3,6 +3,8 @@ import sys
 import configparser
 
 """
+Usage: python3 metrics_calculation_batch.py <city name or all>
+
 This Spark job reads cleaned data from Postgres, performs metrics calculation then
 stores the output back into Postgres.
 

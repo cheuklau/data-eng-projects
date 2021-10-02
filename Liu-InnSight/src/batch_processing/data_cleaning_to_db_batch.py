@@ -5,6 +5,8 @@ import sys
 import configparser
 
 """
+Usage: python3 data_cleaning_to_db_batch.py <city name or all>
+
 This Spark job reads raw csv data from AWS S3, cleans the data and then uploads it to Postgres.
 
 Requires config.ini of the form:

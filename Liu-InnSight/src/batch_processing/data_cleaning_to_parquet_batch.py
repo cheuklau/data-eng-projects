@@ -4,6 +4,8 @@ from pyspark.sql.functions import *
 import sys
 
 """
+Usage: python3 data_cleaning_to_parquet_batch.py <city name or all>
+
 This Spark job reads raw csv data from AWS S3, cleans the data and then stores
 it in Parquet back in AWS S3.
 """

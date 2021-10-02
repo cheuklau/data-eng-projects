@@ -37,9 +37,17 @@ The bottom half of the platform architecture is composed of the following:
 - `src/data_fetch/download_rename.py`
     * Auxiliary function to download data from a given download link.
     * Used by `data_fetch.sh`.
+- `src/batch_processing/data_cleaning_to_db_batch.py`
+    * Spark job that reads data from AWS S3, cleans the data and writes it to Postgres.
+- `src/batch_processing/data_cleaning_to_parquet_batch.py`
+    * Spark job that reads data from AWS S3, cleans the data and writes it to Parquet in AWS S3.
+- `src/batch_processing/metrics_calculation_batch.py`
+    * Spark job that reads cleaned data from Postgres, performs metrics calculation using dataframe methods and Spark SQL queries, and writes results back to Postgres.
+    * Note: The Spark job for reading from Parquet in AWS S3 does not seem to be present.
 
 ## Possible Improvements
 
 - `src/data_fetch/data_fetch.sh`
     * Do not decompress raw data locally and upload to AWS S3.
     * Just have Spark directly read `.gz` files.
+- Add `src/batcg_processing/metrics_calculation_batch_parquet.py` to read data from Parquet in AWS S3.

@@ -44,6 +44,9 @@ The bottom half of the platform architecture is composed of the following:
 - `src/batch_processing/metrics_calculation_batch.py`
     * Spark job that reads cleaned data from Postgres, performs metrics calculation using dataframe methods and Spark SQL queries, and writes results back to Postgres.
     * Note: The Spark job for reading from Parquet in AWS S3 does not seem to be present.
+- `src/batch_processing/s3_urls_generation.sh`
+    * Grabs all the AWS S3 URLs created by `data_fetch.sh`.
+    * Writes them all into a file which is read by the `data_cleaning*.py` scripts.
 
 ## Possible Improvements
 

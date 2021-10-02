@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script to generate s3 links for data cleaning batch processing
-# Usage: ./s3_urls_generation.sh [city_name]
+# Script to generate AWS S3 links which is used by the data cleaning batch scripts.
+# Usage: ./s3_urls_generation.sh <city name or all>
 
 city=$1
 

@@ -1,0 +1,6 @@
+.idea/
+*.gz
+*.pyc
+src/data_fetch/dataset
+src/data_fetch/download_links
+*config.ini

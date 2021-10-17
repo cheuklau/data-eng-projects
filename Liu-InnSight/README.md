@@ -47,6 +47,9 @@ The bottom half of the platform architecture is composed of the following:
 - `src/batch_processing/s3_urls_generation.sh`
     * Grabs all the AWS S3 URLs created by `data_fetch.sh`.
     * Writes them all into a file which is read by the `data_cleaning*.py` scripts.
+- `src/airflow/dags/listing_stats_batch.py`
+    * Defines Airflow DAG from raw data to Postgres.
+    * This DAG is run once.
 
 ## Possible Improvements
 

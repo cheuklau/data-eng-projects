@@ -50,6 +50,9 @@ The bottom half of the platform architecture is composed of the following:
 - `src/airflow/dags/listing_stats_batch.py`
     * Defines Airflow DAG from raw data to Postgres.
     * This DAG is run once.
+- `src/streaming_processing/booking_events_simulator.py`
+    * Uses [Faker](https://faker.readthedocs.io/en/master/) Python package to generate a text file of fake booking events.
+
 
 ## Possible Improvements
 

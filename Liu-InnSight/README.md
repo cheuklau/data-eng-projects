@@ -52,7 +52,11 @@ The bottom half of the platform architecture is composed of the following:
     * This DAG is run once.
 - `src/streaming_processing/booking_events_simulator.py`
     * Uses [Faker](https://faker.readthedocs.io/en/master/) Python package to generate a text file of fake booking events.
-
+- `src/streaming_processing/booking_producer.py`
+    * Uses Kafka Python package to create a [Producer](https://kafka-python.readthedocs.io/en/master/apidoc/KafkaProducer.html) that sends each of the events created by Faker to a Kafka topic.
+    * The setup assumes the Kafka cluster is set up on localhost.
+- `src/streaming_processing/booking_spark_streaming.py`
+    * Uses Spark Streaming to read from Kafka topic then convert each record (RDD) into a DataFrame and write it to Postgres.
 
 ## Possible Improvements
 
@@ -60,4 +64,4 @@ The bottom half of the platform architecture is composed of the following:
     * Do not decompress raw data locally and upload to AWS S3.
     * Just have Spark directly read `.gz` files.
 - Add `src/batcg_processing/metrics_calculation_batch_parquet.py` to read data from Parquet in AWS S3.
-- Check if any improvements can be made to Spark SQL calls in metrics calculation.
+- Check if any improvements can be made to Spark SQL calls in metrics calculation

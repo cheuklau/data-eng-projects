@@ -57,6 +57,8 @@ The bottom half of the platform architecture is composed of the following:
     * The setup assumes the Kafka cluster is set up on localhost.
 - `src/streaming_processing/booking_spark_streaming.py`
     * Uses Spark Streaming to read from Kafka topic then convert each record (RDD) into a DataFrame and write it to Postgres.
+- `src/dashboard/app.py`
+    * Defines Dash application providing a UI to run SQL queries againts the Postgres database.
 
 ## Possible Improvements
 
@@ -65,3 +67,4 @@ The bottom half of the platform architecture is composed of the following:
     * Just have Spark directly read `.gz` files.
 - Add `src/batcg_processing/metrics_calculation_batch_parquet.py` to read data from Parquet in AWS S3.
 - Check if any improvements can be made to Spark SQL calls in metrics calculation
+- Perform calculations e.g., average price per zip code in the batch Spark job so that we don't have to perform them per user request. I suppose we could also try caching request responses in the backend.

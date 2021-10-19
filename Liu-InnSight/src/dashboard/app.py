@@ -1,23 +1,28 @@
-# -*- coding: utf-8 -*-
+# Import dash packages
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
 import random
 from time import gmtime, strftime
+# Import package for postgres connection
 import psycopg2
 import configparser
 
+# Read in Postgres configurations
 config = configparser.ConfigParser()
 config.read('config.ini')
 
+# Dashboard styling
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 color = 'rgb(245, 94, 97)'
 month_mapping = {'1': 'Jan', '2': 'Feb', '3': 'Mar', '4': 'Apr', '5': 'May', '6': 'Jun', '7': 'Jul', '8': 'Aug',
                  '9': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'}
 
+# Create Dash object
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+# Define Dash layout
 app.layout = html.Div(style={'font-family': 'monospace'}, children=[
     html.Div([
         html.H1(children='InnSight', style={'margin': 'auto', 'text-align': 'center', 'font-weight': 'bold'}),
@@ -71,6 +76,9 @@ app.layout = html.Div(style={'font-family': 'monospace'}, children=[
 ])
 
 
+# Output to 'average-price' graph defined in Dash layout.
+# Input and state from 'button' and 'input-box' defined in Dash layout.
+# 'data' is retrieved from 'get_average_price()' defined below which queries the Postgres database.
 @app.callback(
     dash.dependencies.Output('average-price', 'figure'),
     [dash.dependencies.Input('button', 'n_clicks')],
@@ -82,7 +90,7 @@ def update_output(_, value):
                        'plot_bgcolor': 'rgba(0,0,0,0)',
                        'font': {'family': 'monospace'}}}
 
-
+# Similar setup as 'average-price' graph above.
 @app.callback(
     dash.dependencies.Output('seasonality', 'figure'),
     [dash.dependencies.Input('button', 'n_clicks')],
@@ -94,7 +102,7 @@ def update_output(_, value):
                        'plot_bgcolor': 'rgba(0,0,0,0)',
                        'font': {'family': 'monospace'}}}
 
-
+# Similar setup as 'average-price' graph above.
 @app.callback(
     dash.dependencies.Output('property-type', 'figure'),
     [dash.dependencies.Input('button', 'n_clicks')],
@@ -106,7 +114,7 @@ def update_output(_, value):
                        'plot_bgcolor': 'rgba(0,0,0,0)',
                        'font': {'family': 'monospace'}}}
 
-
+# Similar setup as 'average-price' graph above.
 @app.callback(
     dash.dependencies.Output('room-type', 'figure'),
     [dash.dependencies.Input('button', 'n_clicks')],
@@ -118,7 +126,7 @@ def update_output(_, value):
                        'plot_bgcolor': 'rgba(0,0,0,0)',
                        'font': {'family': 'monospace'}}}
 
-
+# Similar setup as 'average-price' graph above.
 @app.callback(
     dash.dependencies.Output('price-event', 'data'),
     [dash.dependencies.Input('button', 'n_clicks')],
@@ -126,37 +134,60 @@ def update_output(_, value):
 def update_output(_, value):
     return get_price_event(value)
 
-
 def read_data_from_db(database, sql):
+    """
+    Return sql results from postgres
+
+    Input:
+      database (str): database name
+      sql (str): sql query
+
+    Return:
+      records (list): list of records
+    """
+
     try:
+        # Connect to postgres database
         connection = psycopg2.connect(user=config['DEFAULT']['DB_USER'],
                                       password=config['DEFAULT']['DB_PASSWORD'],
                                       host=config['DEFAULT']['POSTGRESQL_IP'],
                                       port=config['DEFAULT']['POSTGRESQL_PORT'],
                                       database=database)
+
+        # Execute sql query
         cursor = connection.cursor()
         cursor.execute(sql)
-        records = cursor.fetchall()
 
+        # Return the records
+        records = cursor.fetchall()
         return records
+
     except (Exception, psycopg2.Error) as error:
+
         print("Error while fetching data from PostgreSQL", error)
+
     finally:
-        # closing database connection.
+
+        # Closing database connection
         if (connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
 
 
 def get_bedroom_type(zipcode):
+    """
+    Get bedroom type distribution for a given zipcode
+    """
+
+    # Return empty dict if no zipcode provided
     if zipcode is None:
-        # return empty dict
         return {'x': [], 'y': [], 'type': 'bar', 'name': 'Price', 'marker': {'color': color}}
 
+    # Perform sql query on database
     rows = read_data_from_db('price_insight_db',
                              "select * from result_room_type_distribution_all where zipcode = '%s' order by bedrooms" % zipcode)
 
+    # Form response for Dash to plot
     dict_data = {'x': [], 'y': [], 'type': 'bar', 'name': 'Price', 'marker': {'color': color}}
     for row in rows:
         dict_data['x'].append(str(row[1]).split(' ')[0])
@@ -166,8 +197,11 @@ def get_bedroom_type(zipcode):
 
 
 def get_property_type(zipcode):
+    """
+    Get property type distribution for a given zipcode
+    """
+
     if zipcode is None:
-        # return empty dict
         return {'x': [], 'y': [], 'type': 'bar', 'name': 'Price', 'marker': {'color': color}}
 
     rows = read_data_from_db('price_insight_db',
@@ -182,8 +216,11 @@ def get_property_type(zipcode):
 
 
 def get_seasonality(zipcode):
+    """
+    Get seasonality for a given zipcode
+    """
+
     if zipcode is None:
-        # return empty dict
         return {'x': [], 'y': [], 'type': 'bar', 'name': 'Price', 'marker': {'color': color}}
 
     rows = read_data_from_db('price_insight_db',
@@ -198,8 +235,11 @@ def get_seasonality(zipcode):
 
 
 def get_average_price(zipcode):
+    """
+    Get average price for a given zipcode
+    """
+
     if zipcode is None:
-        # return empty dict
         return {'x': [], 'y': [], 'type': 'scatter', 'mode': 'lines', 'name': 'Price', 'marker': {'color': color}}
 
     rows = read_data_from_db('price_insight_db',
@@ -218,8 +258,11 @@ curtime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 
 def get_price_event(zipcode):
+    """
+    Get price event for a given zipcode
+    """
+
     if zipcode is None:
-        # return empty dict
         return []
 
     rows = read_data_from_db('price_insight_db',
